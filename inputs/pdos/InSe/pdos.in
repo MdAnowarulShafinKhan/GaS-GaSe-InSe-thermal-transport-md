@@ -1,0 +1,66 @@
+echo            both
+units           metal
+dimension       3
+atom_style      atomic
+neighbor        2.0 bin
+neigh_modify    every 1 delay 0 check yes    
+
+#2 structure
+
+boundary        p p p
+read_data       InSe_a4p341_2types_atomsk_like_EIAP_zfixed.lmp
+replicate 		10 18 1
+
+#3 potentials
+
+pair_style      tersoff
+pair_coeff      * * InSe.tersoff     In Se
+
+timestep        0.0005  # 0.5 fs timestep
+
+#4 optimize at 0 K
+
+dump            1 all custom 50000 dump.minimization id type x y z
+fix		        1 all box/relax x 0.0 y 0.0
+min_style       cg
+min_modify      line quadratic
+minimize        1.0e-10 1.0e-6 100000 1000000
+unfix           1
+
+# ---------- Stage 2: fixed-box FIRE relaxation ----------
+min_style       fire
+minimize        1.0e-10 1.0e-6 100000 1000000
+undump          1
+
+#5 optimize at 300K
+
+compute         peratom all pe/atom
+reset_timestep  0
+timestep        0.0005
+
+velocity        all create 300 741099 rot yes mom yes dist gaussian
+
+fix             3 all npt temp 300 300 0.05 x 0.0 0.0 0.5 y 0.0 0.0 0.5 couple xy
+thermo          1000
+thermo_style    custom step temp pe ke etotal press
+run             200000
+unfix           3
+
+fix             4 all nvt temp 300 300 0.05
+thermo          1000
+thermo_style    custom step temp pe ke etotal press
+run             200000
+unfix           4
+velocity 		all zero linear
+
+# Switch to NVE ensemble for 500 ps
+
+reset_timestep  0
+
+fix             5 all nve
+
+dump			3 all custom 1 pdos.lammpstrj id type vx vy vz
+dump_modify		3 sort id
+run             200000
+
+print			"SIMULATION DONE"

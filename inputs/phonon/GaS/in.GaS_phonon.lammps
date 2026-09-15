@@ -1,0 +1,9 @@
+units metal
+boundary p p p
+box tilt large
+atom_style atomic
+read_data GaS_unit_relaxed.data
+pair_style tersoff
+pair_coeff * * GaS.tersoff Ga S
+neighbor 2.0 bin
+neigh_modify delay 0 every 1 check yes

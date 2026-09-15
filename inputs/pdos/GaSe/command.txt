@@ -1,0 +1,5 @@
+python pdos_publication.py --dump pdos.lammpstrj --timestep_fs 0.5 --dump_interval_steps 1 --stride 2 --block_len 16384 --max_sample_per_type 0 --species_map "1:Ga,2:Se" --mass_map "Ga=69.723,Se=78.960" --primitive_atoms 4 --smooth_sigma_thz 0.10 --xmin 0 --xmax 20 --prefix PDOS_GaSe_Welch_4p096ps
+export OMP_NUM_THREADS=16
+export OMP_PROC_BIND=spread
+export OMP_PLACES=cores
+lmp -sf omp -pk omp 16 -in pdos.in

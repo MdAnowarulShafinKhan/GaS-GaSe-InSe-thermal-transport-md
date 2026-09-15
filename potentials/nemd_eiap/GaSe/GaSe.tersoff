@@ -1,0 +1,35 @@
+# Tersoff potential for monolayer GaSe
+# Parameter source: Y. Karaaslan, J. Phys. D: Appl. Phys. 58 (2025) 015306.
+# One-body (n, beta): Table 1. Two-body (A, B, lambda1, lambda2): Table 2.
+# Three-body (lambda3, c, d, h): Table 3. Cutoffs (R, D): Table S1 of the SI.
+#
+# Usage (units metal):
+#   pair_style tersoff
+#   pair_coeff * * GaSe.tersoff Ga Se
+#
+# Mapping notes (validated against the paper's relaxed EIAP geometry, SI Table S7:
+# this file reproduces a0 = 4.087 A, d_Ga-Ga = 2.228 A, d_Ga-Se = 2.614 A,
+# h = 4.479 A exactly):
+# - m = 3, gamma = 1: zeta term = fC(rik) * g(theta) * exp[lambda3^3 (rij - rik)^3].
+# - n and beta follow the FIRST (center) element: n(Ga) = 1.2088,
+#   beta(Ga) = 16.0491e-6; n(Se) = 1.0636, beta(Se) = 5.0263e-6. The Ga one-body
+#   parameters are shared with GaS and the Se ones with InSe (SI Section S1).
+# - Three-body parameters are keyed to the ordered (center i, third atom k) pair,
+#   per GULP's pair-wise "boattractive" convention used in the fit: the Ga-Se-Se
+#   set applies to entries Ga-Se-Se AND Ga-Ga-Se; the Se-Ga-Ga set to Se-Ga-Ga
+#   AND Se-Se-Ga. Entries with (i, k) = Ga-Ga or Se-Se are switched off (gamma = 0).
+# - Se-Se pairs do not occur within the cutoff and were not parameterized; the
+#   Se-Se two-body entry is disabled with A = B = 0.
+# - R, D per SI Table S1: Ga-Ga 3.00/0.15 A, Ga-Se 3.10/0.15 A; each row's R, D
+#   gate the i-k distance of the zeta sum.
+#
+# e1 e2 e3  m  gamma  lambda3      c            d        costheta0(h)  n       beta         lambda2  B          R     D     lambda1  A
+
+Ga  Ga  Ga  3  0.0    0.0          0.0          1.0       0.0          1.2088  1.60491e-05  2.7151   1474.1921  3.00  0.15  3.3146   4734.7306
+Ga  Ga  Se  3  1.0    2.1106       193825.9096  21.7985  -0.2451       1.2088  1.60491e-05  2.7151   1474.1921  3.10  0.15  3.3146   4734.7306
+Ga  Se  Ga  3  0.0    0.0          0.0          1.0       0.0          1.2088  1.60491e-05  2.0711   894.1233   3.00  0.15  2.8885   5308.7866
+Ga  Se  Se  3  1.0    2.1106       193825.9096  21.7985  -0.2451       1.2088  1.60491e-05  2.0711   894.1233   3.10  0.15  2.8885   5308.7866
+Se  Ga  Ga  3  1.0    4.5515       123746.5760  20.7559   0.0125       1.0636  5.0263e-06   2.0711   894.1233   3.10  0.15  2.8885   5308.7866
+Se  Ga  Se  3  0.0    0.0          0.0          1.0       0.0          1.0636  5.0263e-06   2.0711   894.1233   3.10  0.15  2.8885   5308.7866
+Se  Se  Ga  3  1.0    4.5515       123746.5760  20.7559   0.0125       1.0636  5.0263e-06   1.0      0.0        3.10  0.15  1.0      0.0
+Se  Se  Se  3  0.0    0.0          0.0          1.0       0.0          1.0636  5.0263e-06   1.0      0.0        3.10  0.15  1.0      0.0

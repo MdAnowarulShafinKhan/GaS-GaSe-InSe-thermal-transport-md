@@ -1,2 +1,16 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+* text=auto eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.csv text eol=lf
+*.txt text eol=lf
+*.dat text eol=lf
+*.data text eol=lf
+*.lmp text eol=lf
+*.in text eol=lf
+*.lammps text eol=lf
+*.tersoff text eol=lf
+*.xlsx binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary

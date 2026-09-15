@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# OS/editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Office temporary files
+~$*.xlsx
+~$*.docx
+
+# Large/recreatable MD outputs intentionally kept out of Git
+*.lammpstrj
+profile.langevin
+log.lammps
+dump.*
+restart.*
+*.restart
+
+# Scratch
+scratch/
+tmp/

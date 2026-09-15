@@ -1,0 +1,35 @@
+# Tersoff potential for monolayer InSe
+# Parameter source: Y. Karaaslan, J. Phys. D: Appl. Phys. 58 (2025) 015306.
+# One-body (n, beta): Table 1. Two-body (A, B, lambda1, lambda2): Table 2.
+# Three-body (lambda3, c, d, h): Table 3. Cutoffs (R, D): Table S1 of the SI.
+#
+# Usage (units metal):
+#   pair_style tersoff
+#   pair_coeff * * InSe.tersoff In Se
+#
+# Mapping notes (validated against the paper's relaxed EIAP geometry, SI Table S8:
+# this file reproduces a0 = 4.341 A, d_In-In = 2.537 A, d_In-Se = 2.753 A,
+# h = 4.816 A exactly):
+# - m = 3, gamma = 1: zeta term = fC(rik) * g(theta) * exp[lambda3^3 (rij - rik)^3].
+# - n and beta follow the FIRST (center) element: n(In) = 1.4133,
+#   beta(In) = 23.8307e-6; n(Se) = 1.0636, beta(Se) = 5.0263e-6. The Se one-body
+#   parameters are shared with GaSe (SI Section S1).
+# - Three-body parameters are keyed to the ordered (center i, third atom k) pair,
+#   per GULP's pair-wise "boattractive" convention used in the fit: the In-Se-Se
+#   set applies to entries In-Se-Se AND In-In-Se; the Se-In-In set to Se-In-In
+#   AND Se-Se-In. Entries with (i, k) = In-In or Se-Se are switched off (gamma = 0).
+# - Se-Se pairs do not occur within the cutoff and were not parameterized; the
+#   Se-Se two-body entry is disabled with A = B = 0.
+# - R, D per SI Table S1: In-In 3.45/0.15 A, In-Se 3.45/0.15 A; each row's R, D
+#   gate the i-k distance of the zeta sum.
+#
+# e1 e2 e3  m  gamma  lambda3      c            d        costheta0(h)  n       beta         lambda2  B          R     D     lambda1  A
+
+In  In  In  3  0.0    0.0          0.0          1.0       0.0          1.4133  2.38307e-05  2.6681   2377.4864  3.45  0.15  3.1521   7073.7147
+In  In  Se  3  1.0    3.8933       124706.5478  18.8701  -0.2894       1.4133  2.38307e-05  2.6681   2377.4864  3.45  0.15  3.1521   7073.7147
+In  Se  In  3  0.0    0.0          0.0          1.0       0.0          1.4133  2.38307e-05  2.1228   1810.0928  3.45  0.15  2.6142   5631.4411
+In  Se  Se  3  1.0    3.8933       124706.5478  18.8701  -0.2894       1.4133  2.38307e-05  2.1228   1810.0928  3.45  0.15  2.6142   5631.4411
+Se  In  In  3  1.0    3.2277       182795.6321  31.8946   0.0469       1.0636  5.0263e-06   2.1228   1810.0928  3.45  0.15  2.6142   5631.4411
+Se  In  Se  3  0.0    0.0          0.0          1.0       0.0          1.0636  5.0263e-06   2.1228   1810.0928  3.45  0.15  2.6142   5631.4411
+Se  Se  In  3  1.0    3.2277       182795.6321  31.8946   0.0469       1.0636  5.0263e-06   1.0      0.0        3.45  0.15  1.0      0.0
+Se  Se  Se  3  0.0    0.0          0.0          1.0       0.0          1.0636  5.0263e-06   1.0      0.0        3.45  0.15  1.0      0.0
